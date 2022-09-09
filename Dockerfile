@@ -1,4 +1,4 @@
-FROM python:3.10-buster
+FROM python:3.9-buster
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 WORKDIR /opt/service

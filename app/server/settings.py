@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
+    "rest_framework.authtoken",
+    "djoser",
     "work_tracking.apps.WorkTrackingConfig",
 ]
 
@@ -126,4 +128,19 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 
+# Auth
 AUTH_USER_MODEL = "core.User"
+
+# DRF
+# https://www.django-rest-framework.org/
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ),
+}
+
+# Djoser
+# https://djoser.readthedocs.io/en/latest/introduction.html
+SIMPLE_JWT = {
+    "AUTH_HEADER_TYPES": ("JWT",),
+}
