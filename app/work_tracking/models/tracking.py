@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models
+from django.db.models import Q
 
 from work_tracking.models.state_machine import FiniteStateMachine
 
@@ -43,6 +44,15 @@ class Employee(BaseModel):
 
     def __str__(self) -> str:
         return f"{self.user.first_name} {self.user.last_name}"
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["team"],
+                condition=Q(is_leader=True),
+                name="unique_team_leader",  # Noqa
+            )
+        ]
 
 
 class Project(BaseModel, FiniteStateMachine):
