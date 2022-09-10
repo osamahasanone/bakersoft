@@ -5,13 +5,13 @@ description = ""
 authors = ["osamahasanone <osamahasanone@gmail.com>"]
 
 [tool.poetry.dependencies]
-python = "3.9.14"
-psycopg2 = "^2.9.3"
+python = "3.9.12"
 django-fsm = "^2.8.1"
 djoser = "^2.1.0"
 djangorestframework-simplejwt = "4.6.0"
 Django = "3.2"
 djangorestframework = "3.12"
+psycopg2-binary = "^2.9.3"
 
 [tool.poetry.dev-dependencies]
 pytest-django = "^4.5.2"
