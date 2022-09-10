@@ -79,7 +79,7 @@ class WorkTimeLog(BaseModel):
     )  # Noqa E501
     since = models.DateTimeField()
     until = models.DateTimeField()
-    achievment = models.CharField(max_length=255)
+    achievement = models.CharField(max_length=255)
     details = models.TextField(null=True, blank=True)
 
     def __str__(self) -> str:
