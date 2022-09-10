@@ -1,7 +1,11 @@
 from rest_framework.viewsets import ModelViewSet
 
-from work_tracking.models import JobTitle, Team
-from work_tracking.serializers import JobTitleSerializer, TeamSerializer
+from work_tracking.models import Employee, JobTitle, Team
+from work_tracking.serializers import (
+    EmployeeSerializer,
+    JobTitleSerializer,
+    TeamSerializer,
+)
 
 
 class TeamViewSet(ModelViewSet):
@@ -12,3 +16,8 @@ class TeamViewSet(ModelViewSet):
 class JobTitleViewSet(ModelViewSet):
     queryset = JobTitle.objects.all()
     serializer_class = JobTitleSerializer
+
+
+class EmployeeViewSet(ModelViewSet):
+    queryset = Employee.objects.all()
+    serializer_class = EmployeeSerializer

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from work_tracking.models import JobTitle, Team
+from work_tracking.models import Employee, JobTitle, Team
 
 
 class TeamSerializer(serializers.ModelSerializer):
@@ -13,3 +13,9 @@ class JobTitleSerializer(serializers.ModelSerializer):
     class Meta:
         model = JobTitle
         fields = ["id", "name", "code", "created_at"]
+
+
+class EmployeeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Employee
+        fields = ["id", "user", "job_title", "team", "created_at"]

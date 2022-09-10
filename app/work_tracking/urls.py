@@ -6,6 +6,7 @@ router = SimpleRouter()
 
 router.register("teams", api.TeamViewSet)
 router.register("job-titles", api.JobTitleViewSet)
+router.register("employees", api.EmployeeViewSet)
 
 
 urlpatterns = router.urls
