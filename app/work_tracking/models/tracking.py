@@ -18,13 +18,6 @@ class BaseModel(models.Model):
 
 class Team(BaseModel):
     name = models.CharField(max_length=255, unique=True)
-    leader = models.ForeignKey(
-        "Employee",
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name="+",  # Noqa E501
-    )
 
     def __str__(self) -> str:
         return self.name
@@ -46,6 +39,7 @@ class Employee(BaseModel):
         JobTitle, null=True, blank=True, on_delete=models.SET_NULL
     )
     team = models.ForeignKey(Team, on_delete=models.PROTECT)
+    is_leader = models.BooleanField(default=False)
 
     def __str__(self) -> str:
         return f"{self.user.first_name} {self.user.last_name}"

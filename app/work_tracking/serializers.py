@@ -6,7 +6,7 @@ from work_tracking.models import Employee, JobTitle, Team
 class TeamSerializer(serializers.ModelSerializer):
     class Meta:
         model = Team
-        fields = ["id", "name", "leader", "created_at"]
+        fields = ["id", "name", "created_at"]
 
 
 class JobTitleSerializer(serializers.ModelSerializer):
@@ -18,4 +18,4 @@ class JobTitleSerializer(serializers.ModelSerializer):
 class EmployeeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Employee
-        fields = ["id", "user", "job_title", "team", "created_at"]
+        fields = ["id", "user", "job_title", "team", "is_leader", "created_at"]
