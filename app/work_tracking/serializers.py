@@ -73,6 +73,8 @@ class TaskSerializer(serializers.ModelSerializer):
 
 
 class WorkTimeLogSerializer(serializers.ModelSerializer):
+    employee = serializers.PrimaryKeyRelatedField(read_only=True)
+
     class Meta:
         model = WorkTimeLog
         fields = [

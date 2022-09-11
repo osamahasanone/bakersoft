@@ -78,4 +78,4 @@ class WorkTimeLog(BaseModel):
     details = models.TextField(null=True, blank=True)
 
     def __str__(self) -> str:
-        return self.achievment
+        return self.achievement
