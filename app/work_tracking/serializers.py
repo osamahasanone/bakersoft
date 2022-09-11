@@ -1,3 +1,4 @@
+from django.utils import timezone
 from rest_framework import serializers
 
 from work_tracking.models import (  # Noqa
@@ -70,6 +71,15 @@ class TaskSerializer(serializers.ModelSerializer):
             "due_time",
             "created_at",
         ]  # Noqa
+
+    def validate(self, data):
+        if data["start_time"] < timezone.now():
+            raise serializers.ValidationError("Start time should be in future")  # Noqa
+        if data["due_time"] <= data["start_time"]:
+            raise serializers.ValidationError(
+                "Due time should be after start time"
+            )  # Noqa
+        return data
 
 
 class WorkTimeLogSerializer(serializers.ModelSerializer):
