@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.db import models
 
-from work_tracking.models.state_machine import FiniteStateMachine
+from work_tracking.models.state_machine import FiniteStateMachine, State
 
 
 class BaseModel(models.Model):
@@ -65,6 +65,16 @@ class Task(BaseModel, FiniteStateMachine):
 
     def __str__(self) -> str:
         return self.summary
+
+
+class TaskStateChange(models.Model):
+    task = models.ForeignKey(Task, on_delete=models.CASCADE)
+    state = models.CharField(choices=State.choices, max_length=255)
+    comment = models.CharField(max_length=255)
+    transitioned_at = models.DateTimeField()
+
+    def __str__(self) -> str:
+        return f"{self.task} - {self.state}"
 
 
 class WorkTimeLog(BaseModel):
