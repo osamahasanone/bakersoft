@@ -59,12 +59,16 @@ class JobTitleViewSet(BaseViewSet):
 
 
 class EmployeeViewSet(BaseViewSet):
-    queryset = Employee.objects.all()
+    queryset = Employee.objects.select_related("job_title", "team").all()
     serializer_class = EmployeeSerializer
 
 
 class ProjectViewSet(BaseViewSet):
-    queryset = Project.objects.all()
+    queryset = (
+        Project.objects.select_related("manager")
+        .prefetch_related("teams")
+        .all()  # Noqa
+    )  # Noqa
     serializer_class = ProjectSerializer
 
     @action(detail=True, methods=["get"])
@@ -77,7 +81,7 @@ class ProjectViewSet(BaseViewSet):
 
 
 class TaskViewSet(ModelViewSet):
-    queryset = Task.objects.all()
+    queryset = Task.objects.select_related("project", "team_assigned_to").all()
     serializer_class = TaskSerializer
     permission_classes = [IsAuthenticated]
 
