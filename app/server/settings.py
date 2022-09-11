@@ -151,3 +151,35 @@ SIMPLE_JWT = {
 DJOSER = {
     "SERIALIZERS": {"user_create": "core.serializers.UserCreateSerializer"}
 }  # Noqa
+
+# Celery
+# ------------------------------------------------------------------------------
+import ssl  # NOQA
+from datetime import timedelta  # NOQA
+
+from celery.schedules import crontab  # Noqa
+
+INSTALLED_APPS += ["django_celery_results", "django_celery_beat"]
+
+CELERY_BROKER_URL = "redis://:password@redis:6379/"
+CELERY_RESULT_BACKEND = "django-db"
+CELERY_TASK_STORE_ERRORS_EVEN_IF_IGNORED = True
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_EXPIRES = timedelta(hours=1)
+CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
+CELERY_BEAT_SCHEDULE = {
+    "notify_team_leaders_about_tasks_overdue_soon": {
+        "task": "work_tracking.tasks.notify_team_leaders_about_tasks_overdue_soon",  # Noqa
+        "schedule": crontab(hour=1, minute=59),
+    }
+}
+
+CELERY_WORKER_MAX_TASKS_PER_CHILD = 2000
+CELERY_WORKER_POOL_RESTARTS = True
+CELERY_WORKER_HIJACK_ROOT_LOGGER = False
+CELERYD_MAX_TASKS_PER_CHILD = 2000
+CELERY_MAX_TASKS_PER_CHILD = 2000
+CELERY_TASK_QUEUES = []
+CELERY_TASK_QUEUE_HA_POLICY = "all"
+
+CELERY_TASK_ROUTES = ["core.celery.task_router.task_router"]

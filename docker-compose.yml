@@ -25,3 +25,26 @@ services:
       - POSTGRES_PASSWORD=postgres
     depends_on:
       - db
+
+  redis:
+    image: bitnami/redis:6.2.7
+    environment:
+      - REDIS_PASSWORD=password
+    ports:
+      - "7379:6379"
+  celery_worker:
+    build: .
+    container_name: bakersoft-worker
+    command: celery -A core.celery worker -E --loglevel=info
+    environment:
+      - POSTGRES_NAME=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+  celery_beat:
+    build: .
+    container_name: bakersoft-beat
+    command: celery -A core.celery beat --loglevel=info
+    environment:
+      - POSTGRES_NAME=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
