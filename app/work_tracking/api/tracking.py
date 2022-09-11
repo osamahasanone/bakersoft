@@ -3,64 +3,27 @@ from functools import cached_property
 from django_fsm import TransitionNotAllowed
 from rest_framework import status
 from rest_framework.decorators import action
-from rest_framework.permissions import (
-    SAFE_METHODS,
-    DjangoModelPermissions,
-    IsAuthenticated,
-)
+from rest_framework.permissions import SAFE_METHODS, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
+from work_tracking.api.base import BaseViewSet
 from work_tracking.errors import (  # Noqa
     LogActionNotAllowed,
     StateMachineChangeNotAllowed,
     TaskIsAssignedToAnotherTeam,
 )
-from work_tracking.models import (  # Noqa
-    Employee,
-    JobTitle,
-    Project,
-    Task,
-    Team,
-    WorkTimeLog,
-)
+from work_tracking.models import Project, Task, WorkTimeLog
 from work_tracking.serializers import (
-    EmployeeSerializer,
-    JobTitleSerializer,
     ProjectSerializer,
     ProjectStatsSerializer,
     TaskSerializer,
     TaskStateChangeSerializer,
-    TeamSerializer,
     WorkTimeLogSerializer,
 )
 from work_tracking.services.employee import can_add_log
 from work_tracking.services.project import get_stats as get_project_stats
 from work_tracking.services.task import perform_task_transition
-
-
-class BaseViewSet(ModelViewSet):
-    def get_permissions(self):
-        if self.request.method in SAFE_METHODS:
-            permission_classes = [IsAuthenticated]
-        else:
-            permission_classes = [IsAuthenticated, DjangoModelPermissions]
-        return [permission() for permission in permission_classes]
-
-
-class TeamViewSet(BaseViewSet):
-    queryset = Team.objects.all()
-    serializer_class = TeamSerializer
-
-
-class JobTitleViewSet(BaseViewSet):
-    queryset = JobTitle.objects.all()
-    serializer_class = JobTitleSerializer
-
-
-class EmployeeViewSet(BaseViewSet):
-    queryset = Employee.objects.select_related("job_title", "team").all()
-    serializer_class = EmployeeSerializer
 
 
 class ProjectViewSet(BaseViewSet):
