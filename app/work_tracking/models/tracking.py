@@ -58,6 +58,7 @@ class Project(BaseModel, FiniteStateMachine):
 class Task(BaseModel, FiniteStateMachine):
     summary = models.CharField(max_length=255, unique=True)
     description = models.TextField(null=True, blank=True)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
     team_assigned_to = models.ForeignKey(Team, on_delete=models.PROTECT)
     start_time = models.DateTimeField()
     due_time = models.DateTimeField()
