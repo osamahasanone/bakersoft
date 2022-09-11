@@ -18,3 +18,9 @@ class TaskIsAssignedToAnotherTeam(APIException, TrackingException):
     default_detail = (
         "User can't add logs to a task that is assigned to another team"  # Noqa
     )
+
+
+class StateMachineChangeNotAllowed(APIException, TrackingException):
+    status_code = status.HTTP_401_UNAUTHORIZED
+    default_code = "StateMachineChangeNotAllowed"
+    default_detail = "State change violates the rules"

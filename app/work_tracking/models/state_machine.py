@@ -41,5 +41,14 @@ class FiniteStateMachine(models.Model):
     def transition_to_completed(self) -> None:
         pass
 
+    def get_transition(self, state: State):
+        state_transition_map = {
+            State.OPEN: self.transition_to_open,
+            State.BLOCKED: self.transition_to_blocked,
+            State.IN_PROGRESS: self.transition_to_in_progress,
+            State.COMPLETED: self.transition_to_completed,
+        }
+        return state_transition_map[state]
+
     class Meta:
         abstract = True

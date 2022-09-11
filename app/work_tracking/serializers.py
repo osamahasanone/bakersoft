@@ -6,6 +6,7 @@ from work_tracking.models import (  # Noqa
     JobTitle,
     Project,
     Task,
+    TaskStateChange,
     Team,
     WorkTimeLog,
 )
@@ -86,6 +87,20 @@ class TaskSerializer(serializers.ModelSerializer):
                 "Due time should be after start time"
             )  # Noqa
         return data
+
+
+class TaskStateChangeSerializer(serializers.ModelSerializer):
+    task = serializers.PrimaryKeyRelatedField(read_only=True)
+
+    class Meta:
+        model = TaskStateChange
+        fields = [
+            "id",
+            "task",
+            "state",
+            "comment",
+            "transitioned_at",
+        ]  # Noqa
 
 
 class WorkTimeLogSerializer(serializers.ModelSerializer):

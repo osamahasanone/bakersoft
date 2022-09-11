@@ -1,5 +1,6 @@
 from functools import cached_property
 
+from django_fsm import TransitionNotAllowed
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.permissions import SAFE_METHODS, IsAuthenticated
@@ -8,6 +9,7 @@ from rest_framework.viewsets import ModelViewSet
 
 from work_tracking.errors import (  # Noqa
     LogActionNotAllowed,
+    StateMachineChangeNotAllowed,
     TaskIsAssignedToAnotherTeam,
 )
 from work_tracking.models import (  # Noqa
@@ -24,11 +26,13 @@ from work_tracking.serializers import (
     ProjectSerializer,
     ProjectStatsSerializer,
     TaskSerializer,
+    TaskStateChangeSerializer,
     TeamSerializer,
     WorkTimeLogSerializer,
 )
 from work_tracking.services.employee import can_add_log
 from work_tracking.services.project import get_stats as get_project_stats
+from work_tracking.services.task import perform_task_transition
 
 
 class TeamViewSet(ModelViewSet):
@@ -62,6 +66,21 @@ class ProjectViewSet(ModelViewSet):
 class TaskViewSet(ModelViewSet):
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
+
+    @action(
+        detail=True,
+        methods=["post"],
+        serializer_class=TaskStateChangeSerializer,  # Noqa
+    )  # Noqa
+    def transition(self, request, pk=None):
+        task = self.get_object()
+        serializer = TaskStateChangeSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        try:
+            perform_task_transition(task, serializer)
+        except TransitionNotAllowed:
+            raise StateMachineChangeNotAllowed
+        return Response({})
 
 
 class WorkTimeLogViewSet(ModelViewSet):
