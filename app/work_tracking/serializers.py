@@ -74,6 +74,9 @@ class TaskSerializer(serializers.ModelSerializer):
 
 class WorkTimeLogSerializer(serializers.ModelSerializer):
     employee = serializers.PrimaryKeyRelatedField(read_only=True)
+    project = serializers.IntegerField(
+        source="task.project.id", read_only=True, default=None
+    )
 
     class Meta:
         model = WorkTimeLog
@@ -81,6 +84,7 @@ class WorkTimeLogSerializer(serializers.ModelSerializer):
             "id",
             "employee",
             "task",
+            "project",
             "since",
             "until",
             "achievement",
