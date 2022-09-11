@@ -66,12 +66,15 @@ class ProjectStatsSerializer(serializers.Serializer):
 
 
 class TaskSerializer(serializers.ModelSerializer):
+    state = serializers.CharField(read_only=True)
+
     class Meta:
         model = Task
         fields = [
             "id",
             "summary",
             "description",
+            "state",
             "project",
             "team_assigned_to",
             "start_time",
