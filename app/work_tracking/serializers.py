@@ -65,8 +65,22 @@ class ProjectStatsSerializer(serializers.Serializer):
     active_employees = serializers.IntegerField()
 
 
+class TaskStateChangeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TaskStateChange
+        fields = [
+            "id",
+            "state",
+            "comment",
+            "transitioned_at",
+        ]  # Noqa
+
+
 class TaskSerializer(serializers.ModelSerializer):
     state = serializers.CharField(read_only=True)
+    state_changes = TaskStateChangeSerializer(
+        source="taskstatechange_set", many=True, read_only=True
+    )  # Noqa
 
     class Meta:
         model = Task
@@ -80,6 +94,7 @@ class TaskSerializer(serializers.ModelSerializer):
             "start_time",
             "due_time",
             "created_at",
+            "state_changes",
         ]  # Noqa
 
     def validate(self, data):
@@ -90,20 +105,6 @@ class TaskSerializer(serializers.ModelSerializer):
                 "Due time should be after start time"
             )  # Noqa
         return data
-
-
-class TaskStateChangeSerializer(serializers.ModelSerializer):
-    task = serializers.PrimaryKeyRelatedField(read_only=True)
-
-    class Meta:
-        model = TaskStateChange
-        fields = [
-            "id",
-            "task",
-            "state",
-            "comment",
-            "transitioned_at",
-        ]  # Noqa
 
 
 class WorkTimeLogSerializer(serializers.ModelSerializer):
