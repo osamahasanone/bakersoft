@@ -3,7 +3,11 @@ from functools import cached_property
 from django_fsm import TransitionNotAllowed
 from rest_framework import status
 from rest_framework.decorators import action
-from rest_framework.permissions import SAFE_METHODS, IsAuthenticated
+from rest_framework.permissions import (
+    SAFE_METHODS,
+    DjangoModelPermissions,
+    IsAuthenticated,
+)
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
@@ -35,22 +39,31 @@ from work_tracking.services.project import get_stats as get_project_stats
 from work_tracking.services.task import perform_task_transition
 
 
-class TeamViewSet(ModelViewSet):
+class BaseViewSet(ModelViewSet):
+    def get_permissions(self):
+        if self.request.method in SAFE_METHODS:
+            permission_classes = [IsAuthenticated]
+        else:
+            permission_classes = [IsAuthenticated, DjangoModelPermissions]
+        return [permission() for permission in permission_classes]
+
+
+class TeamViewSet(BaseViewSet):
     queryset = Team.objects.all()
     serializer_class = TeamSerializer
 
 
-class JobTitleViewSet(ModelViewSet):
+class JobTitleViewSet(BaseViewSet):
     queryset = JobTitle.objects.all()
     serializer_class = JobTitleSerializer
 
 
-class EmployeeViewSet(ModelViewSet):
+class EmployeeViewSet(BaseViewSet):
     queryset = Employee.objects.all()
     serializer_class = EmployeeSerializer
 
 
-class ProjectViewSet(ModelViewSet):
+class ProjectViewSet(BaseViewSet):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
 
@@ -66,6 +79,7 @@ class ProjectViewSet(ModelViewSet):
 class TaskViewSet(ModelViewSet):
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
+    permission_classes = [IsAuthenticated]
 
     @action(
         detail=True,
