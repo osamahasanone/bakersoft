@@ -4,12 +4,6 @@ from work_tracking.models import Employee, JobTitle, Team
 from work_tracking.services.team import get_team_leader
 
 
-class TeamSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Team
-        fields = ["id", "name", "created_at"]
-
-
 class JobTitleSerializer(serializers.ModelSerializer):
     class Meta:
         model = JobTitle
@@ -31,3 +25,13 @@ class EmployeeSerializer(serializers.ModelSerializer):
                     "A team should have only one leader"
                 )  # Noqa
         return data
+
+
+class TeamSerializer(serializers.ModelSerializer):
+    employees = EmployeeSerializer(
+        source="employee_set", many=True, read_only=True
+    )  # Noqa
+
+    class Meta:
+        model = Team
+        fields = ["id", "name", "created_at", "employees"]
