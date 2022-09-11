@@ -8,6 +8,7 @@ router.register("teams", api.TeamViewSet)
 router.register("job-titles", api.JobTitleViewSet)
 router.register("employees", api.EmployeeViewSet)
 router.register("projects", api.ProjectViewSet)
+router.register("tasks", api.TaskViewSet)
 
 
 urlpatterns = router.urls

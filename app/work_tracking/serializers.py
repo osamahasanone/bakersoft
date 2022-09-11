@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from work_tracking.models import Employee, JobTitle, Project, Team
+from work_tracking.models import Employee, JobTitle, Project, Task, Team
 from work_tracking.services.team import get_team_leader
 
 
@@ -46,5 +46,20 @@ class ProjectSerializer(serializers.ModelSerializer):
             "description",
             "manager",
             "teams",
+            "created_at",
+        ]  # Noqa
+
+
+class TaskSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Task
+        fields = [
+            "id",
+            "summary",
+            "description",
+            "project",
+            "team_assigned_to",
+            "start_time",
+            "due_time",
             "created_at",
         ]  # Noqa
