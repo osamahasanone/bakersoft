@@ -1,6 +1,7 @@
 from functools import cached_property
 
 from rest_framework import status
+from rest_framework.decorators import action
 from rest_framework.permissions import SAFE_METHODS, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
@@ -21,11 +22,13 @@ from work_tracking.serializers import (
     EmployeeSerializer,
     JobTitleSerializer,
     ProjectSerializer,
+    ProjectStatsSerializer,
     TaskSerializer,
     TeamSerializer,
     WorkTimeLogSerializer,
 )
 from work_tracking.services.employee import can_add_log
+from work_tracking.services.project import get_stats as get_project_stats
 
 
 class TeamViewSet(ModelViewSet):
@@ -46,6 +49,14 @@ class EmployeeViewSet(ModelViewSet):
 class ProjectViewSet(ModelViewSet):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
+
+    @action(detail=True, methods=["get"])
+    def stats(self, request, pk=None):
+        serializer = ProjectStatsSerializer(
+            data=get_project_stats(self.get_object())
+        )  # Noqa
+        serializer.is_valid(raise_exception=True)
+        return Response(serializer.data)
 
 
 class TaskViewSet(ModelViewSet):

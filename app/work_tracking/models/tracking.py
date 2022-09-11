@@ -60,8 +60,8 @@ class Task(BaseModel, FiniteStateMachine):
     description = models.TextField(null=True, blank=True)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     team_assigned_to = models.ForeignKey(Team, on_delete=models.PROTECT)
-    start_time = models.DateTimeField()
-    due_time = models.DateTimeField()
+    start_time = models.DateTimeField(db_index=True)
+    due_time = models.DateTimeField(db_index=True)
 
     def __str__(self) -> str:
         return self.summary

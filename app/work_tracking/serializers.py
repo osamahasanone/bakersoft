@@ -58,6 +58,12 @@ class ProjectSerializer(serializers.ModelSerializer):
         ]  # Noqa
 
 
+class ProjectStatsSerializer(serializers.Serializer):
+    estimated_hours = serializers.FloatField(allow_null=True)
+    teams = serializers.IntegerField()
+    active_employees = serializers.IntegerField()
+
+
 class TaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task
