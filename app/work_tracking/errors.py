@@ -21,6 +21,6 @@ class TaskIsAssignedToAnotherTeam(APIException, TrackingException):
 
 
 class StateMachineChangeNotAllowed(APIException, TrackingException):
-    status_code = status.HTTP_401_UNAUTHORIZED
+    status_code = status.HTTP_400_BAD_REQUEST
     default_code = "StateMachineChangeNotAllowed"
     default_detail = "State change violates the rules"

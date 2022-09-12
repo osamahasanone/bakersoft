@@ -13,6 +13,7 @@ from work_tracking.errors import (  # Noqa
     TaskIsAssignedToAnotherTeam,
 )
 from work_tracking.models import Project, Task, WorkTimeLog
+from work_tracking.permissions import TaskTransitionPermission
 from work_tracking.serializers import (
     ProjectSerializer,
     ProjectStatsSerializer,
@@ -52,6 +53,7 @@ class TaskViewSet(ModelViewSet):
         detail=True,
         methods=["post"],
         serializer_class=TaskStateChangeSerializer,  # Noqa
+        permission_classes=[IsAuthenticated, TaskTransitionPermission],
     )  # Noqa
     def transition(self, request, pk=None):
         task = self.get_object()
