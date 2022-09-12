@@ -7,7 +7,6 @@ from rest_framework.permissions import SAFE_METHODS, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
-from work_tracking.api.base import BaseViewSet
 from work_tracking.errors import (  # Noqa
     LogActionNotAllowed,
     StateMachineChangeNotAllowed,
@@ -26,13 +25,14 @@ from work_tracking.services.project import get_stats as get_project_stats
 from work_tracking.services.task import perform_task_transition
 
 
-class ProjectViewSet(BaseViewSet):
+class ProjectViewSet(ModelViewSet):
     queryset = (
         Project.objects.select_related("manager")
         .prefetch_related("teams")
         .all()  # Noqa
     )  # Noqa
     serializer_class = ProjectSerializer
+    permission_classes = [IsAuthenticated]
 
     @action(detail=True, methods=["get"])
     def stats(self, request, pk=None):
