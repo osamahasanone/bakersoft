@@ -8,7 +8,7 @@ RUN curl -sSL https://install.python-poetry.org | POETRY_HOME=/opt/poetry python
     cd /usr/local/bin && \
     ln -s /opt/poetry/bin/poetry && \
     poetry config virtualenvs.create false
-RUN poetry install --no-root --no-dev
+RUN poetry install --no-root
 
 RUN addgroup --system django \
     && adduser --system --ingroup django django

@@ -18,6 +18,8 @@ celery = "^5.2.7"
 django-celery-beat = "^2.3.0"
 django-celery-results = "^2.4.0"
 redis = "^4.3.4"
+model-bakery = "^1.7.0"
+arrow = "^1.2.3"
 
 [tool.poetry.dev-dependencies]
 pytest-django = "^4.5.2"
