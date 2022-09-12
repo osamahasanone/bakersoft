@@ -88,11 +88,15 @@ class WorkTimeLogViewSet(
         return self.request.user.employee
 
     def get_queryset(self):
+        queryset = WorkTimeLog.objects.select_related("employee", "task__project").all()
+        project_id = self.request.query_params.get("project_id")
+        if project_id:
+            return queryset.filter(
+                task__project__id=project_id, task__in=self.employee.team.task_set.all()
+            )
         task_ids = [task.project.id for task in self.employee.team.task_set.all()]
         projects = Project.objects.filter(id__in=task_ids)
-        return WorkTimeLog.objects.select_related("employee", "task__project").filter(
-            task__project__in=projects
-        )
+        return queryset.filter(task__project__in=projects)
 
     def get_permissions(self):
         if self.request.method in SAFE_METHODS:

@@ -65,6 +65,42 @@ def test_employee_cant_see_logs_on_project_his_team_not_envolved_in(
     assert response.status_code == 200
 
 
+def test_employee_see_others_logs_by_project_id(api_client, employee):
+    # target project
+    target_task = baker.make(Task, team_assigned_to=employee.team)
+    log_1 = baker.make(WorkTimeLog, employee=employee, task=target_task)
+    log_2 = baker.make(WorkTimeLog, employee=employee, task=target_task)
+    another_team_member = baker.make(Employee)
+    log_3 = baker.make(WorkTimeLog, employee=another_team_member, task=target_task)
+
+    # another project
+    another_task = baker.make(Task, team_assigned_to=employee.team)
+    baker.make(WorkTimeLog, employee=employee, task=another_task)
+    baker.make(WorkTimeLog, employee=employee, task=another_task)
+    another_team_member = baker.make(Employee)
+    baker.make(WorkTimeLog, employee=another_team_member, task=another_task)
+
+    # Action
+    response = api_client.get(f"/tracking/logs/?project_id={target_task.project.id}")
+
+    # Assert
+    assert response.status_code == 200
+    assert len(response.json()) == 3
+    assert response.json()[0]["id"] == log_3.id
+    assert response.json()[1]["id"] == log_2.id
+    assert response.json()[2]["id"] == log_1.id
+
+    # Action
+    response = api_client.get(f"/tracking/logs/?project_id={target_task.project.id}")
+
+    # Assert
+    assert response.status_code == 200
+    assert len(response.json()) == 3
+    assert response.json()[0]["id"] == log_3.id
+    assert response.json()[1]["id"] == log_2.id
+    assert response.json()[2]["id"] == log_1.id
+
+
 def test_employee_see_his_log_entry(api_client, employee):
     # Arrange
     task = baker.make(Task, team_assigned_to=employee.team)
