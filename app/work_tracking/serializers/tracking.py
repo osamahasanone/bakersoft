@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from work_tracking.models import Project, Task, TaskStateChange, WorkTimeLog  # Noqa
+from work_tracking.models import Project, Task, TaskStateChange, WorkTimeLog
 
 
 class ProjectSerializer(serializers.ModelSerializer):
@@ -13,7 +13,7 @@ class ProjectSerializer(serializers.ModelSerializer):
             "manager",
             "teams",
             "created_at",
-        ]  # Noqa
+        ]
 
 
 class ProjectStatsSerializer(serializers.Serializer):
@@ -30,14 +30,14 @@ class TaskStateChangeSerializer(serializers.ModelSerializer):
             "state",
             "comment",
             "transitioned_at",
-        ]  # Noqa
+        ]
 
 
 class TaskSerializer(serializers.ModelSerializer):
     state = serializers.CharField(read_only=True)
     state_changes = TaskStateChangeSerializer(
         source="taskstatechange_set", many=True, read_only=True
-    )  # Noqa
+    )
 
     class Meta:
         model = Task
@@ -52,13 +52,11 @@ class TaskSerializer(serializers.ModelSerializer):
             "due_time",
             "created_at",
             "state_changes",
-        ]  # Noqa
+        ]
 
     def validate(self, data):
         if data["due_time"] <= data["start_time"]:
-            raise serializers.ValidationError(
-                "Due time should be after start time"
-            )  # Noqa
+            raise serializers.ValidationError("Due time should be after start time")
         return data
 
 
@@ -80,4 +78,4 @@ class WorkTimeLogSerializer(serializers.ModelSerializer):
             "achievement",
             "details",
             "created_at",
-        ]  # Noqa
+        ]

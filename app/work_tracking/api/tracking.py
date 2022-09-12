@@ -7,7 +7,7 @@ from rest_framework.permissions import SAFE_METHODS, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
-from work_tracking.errors import (  # Noqa
+from work_tracking.errors import (
     LogActionNotAllowed,
     StateMachineChangeNotAllowed,
     TaskIsAssignedToAnotherTeam,
@@ -27,19 +27,13 @@ from work_tracking.services.task import perform_task_transition
 
 
 class ProjectViewSet(ModelViewSet):
-    queryset = (
-        Project.objects.select_related("manager")
-        .prefetch_related("teams")
-        .all()  # Noqa
-    )  # Noqa
+    queryset = Project.objects.select_related("manager").prefetch_related("teams").all()
     serializer_class = ProjectSerializer
     permission_classes = [IsAuthenticated]
 
     @action(detail=True, methods=["get"])
     def stats(self, request, pk=None):
-        serializer = ProjectStatsSerializer(
-            data=get_project_stats(self.get_object())
-        )  # Noqa
+        serializer = ProjectStatsSerializer(data=get_project_stats(self.get_object()))
         serializer.is_valid(raise_exception=True)
         return Response(serializer.data)
 
@@ -52,9 +46,9 @@ class TaskViewSet(ModelViewSet):
     @action(
         detail=True,
         methods=["post"],
-        serializer_class=TaskStateChangeSerializer,  # Noqa
+        serializer_class=TaskStateChangeSerializer,
         permission_classes=[IsAuthenticated, TaskTransitionPermission],
-    )  # Noqa
+    )
     def transition(self, request, pk=None):
         task = self.get_object()
         serializer = TaskStateChangeSerializer(data=request.data)
@@ -77,9 +71,7 @@ class WorkTimeLogViewSet(ModelViewSet):
     def get_queryset(self):
         task_ids = [task.project.id for task in self.employee.team.task_set.all()]
         projects = Project.objects.filter(id__in=task_ids)
-        return WorkTimeLog.objects.select_related(
-            "employee", "task__project"
-        ).filter(  # Noqa
+        return WorkTimeLog.objects.select_related("employee", "task__project").filter(
             task__project__in=projects
         )
 
@@ -109,9 +101,7 @@ class WorkTimeLogViewSet(ModelViewSet):
 
         partial = kwargs.pop("partial", False)
         instance = self.get_object()
-        serializer = self.get_serializer(
-            instance, data=request.data, partial=partial
-        )  # Noqa
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
 
         if not can_add_log(self.employee, serializer.validated_data["task"]):

@@ -24,9 +24,7 @@ def test_get_notify_team_leaders_about_tasks_overdue_soon(caplog):
     task_to_notify_2 = baker.make(
         Task, team_assigned_to=team_1, due_time=now.shift(days=3).datetime
     )
-    baker.make(
-        Task, team_assigned_to=team_1, due_time=now.shift(days=5).datetime
-    )  # Noqa
+    baker.make(Task, team_assigned_to=team_1, due_time=now.shift(days=5).datetime)
 
     # Arrange team 2 tasks
     team_2 = baker.make(Team)
@@ -38,9 +36,7 @@ def test_get_notify_team_leaders_about_tasks_overdue_soon(caplog):
     task_to_notify_4 = baker.make(
         Task, team_assigned_to=team_2, due_time=now.shift(days=3).datetime
     )
-    baker.make(
-        Task, team_assigned_to=team_2, due_time=now.shift(days=5).datetime
-    )  # Noqa
+    baker.make(Task, team_assigned_to=team_2, due_time=now.shift(days=5).datetime)
 
     # Action
     with caplog.at_level(logging.INFO):
@@ -49,9 +45,7 @@ def test_get_notify_team_leaders_about_tasks_overdue_soon(caplog):
 
     # Assert
     assert len(caplog.records) == 4
-    NOTIFICATION = (
-        "Dummy Notification to {leader} : task {task} will be overdue soon"  # Noqa
-    )
+    NOTIFICATION = "Dummy Notification to {leader} : task {task} will be overdue soon"
     assert caplog.records[0].__dict__["message"] == NOTIFICATION.format(
         leader=team_2_leader, task=task_to_notify_4
     )

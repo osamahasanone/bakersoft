@@ -14,12 +14,7 @@ def get_estimated_hours(project: Project) -> Optional[float]:
 
 
 def get_assigned_to_teams(project: Project) -> int:
-    return (
-        project.task_set.order_by()
-        .values("team_assigned_to")
-        .distinct()
-        .count()  # Noqa
-    )  # Noqa
+    return project.task_set.order_by().values("team_assigned_to").distinct().count()
 
 
 def get_active_employees(project: Project) -> int:

@@ -21,16 +21,12 @@ class EmployeeSerializer(serializers.ModelSerializer):
             if current_team_leader and (
                 not self.instance or self.instance != current_team_leader
             ):
-                raise serializers.ValidationError(
-                    "A team should have only one leader"
-                )  # Noqa
+                raise serializers.ValidationError("A team should have only one leader")
         return data
 
 
 class TeamSerializer(serializers.ModelSerializer):
-    employees = EmployeeSerializer(
-        source="employee_set", many=True, read_only=True
-    )  # Noqa
+    employees = EmployeeSerializer(source="employee_set", many=True, read_only=True)
 
     class Meta:
         model = Team

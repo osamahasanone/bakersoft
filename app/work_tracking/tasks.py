@@ -15,14 +15,12 @@ SOON_IN_DAYS = 7
 @app.task
 def notify_team_leaders_about_tasks_overdue_soon(
     soon_in_days: int = SOON_IN_DAYS,
-):  # Noqa
+):
     soon_date = (datetime.now() + timedelta(days=soon_in_days)).date()
     today = timezone.now().date()
-    tasks_overdue_tomorrow = Task.objects.select_related(
-        "team_assigned_to"
-    ).filter(  # Noqa
+    tasks_overdue_tomorrow = Task.objects.select_related("team_assigned_to").filter(
         due_time__date__gte=today, due_time__date__lte=soon_date
-    )  # Noqa
+    )
     for task in tasks_overdue_tomorrow:
         task_team_leader = get_team_leader(task.team_assigned_to)
         logger.info(
