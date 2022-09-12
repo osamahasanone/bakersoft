@@ -7,13 +7,13 @@ pytestmark = pytest.mark.django_db
 
 
 def test_employee_see_his_logs(api_client, employee):
-    # invlove employee team in a project
+    # envolve employee team in a project
     task = baker.make(Task, team_assigned_to=employee.team)
     # employee added logs
     baker.make(WorkTimeLog, employee=employee, task=task)
     baker.make(WorkTimeLog, employee=employee, task=task)
 
-    # invlove employee team in another project
+    # envolve employee team in another project
     another_task = baker.make(Task, team_assigned_to=employee.team)
     # employee added logs
     baker.make(WorkTimeLog, employee=employee, task=another_task)
@@ -26,8 +26,8 @@ def test_employee_see_his_logs(api_client, employee):
     assert response.status_code == 200
 
 
-def test_employee_see_others_logs_on_project_his_team_ivolved_in(api_client, employee):
-    # invlove employee team in a project
+def test_employee_see_others_logs_on_project_his_team_envolved_in(api_client, employee):
+    # envolve employee team in a project
     task = baker.make(Task, team_assigned_to=employee.team)
     # employee added logs
     baker.make(WorkTimeLog, employee=employee, task=task)
@@ -47,11 +47,11 @@ def test_employee_see_others_logs_on_project_his_team_ivolved_in(api_client, emp
     assert response.status_code == 200
 
 
-def test_employee_cant_see_logs_on_project_his_team_not_ivolved_in(
+def test_employee_cant_see_logs_on_project_his_team_not_envolved_in(
     api_client, employee
 ):
     another_team_member = baker.make(Employee)
-    # invlove other team in a project
+    # envolve other team in a project
     task = baker.make(Task, team_assigned_to=another_team_member.team)
     # new logs to the project
     baker.make(WorkTimeLog, employee=another_team_member, task=task)
