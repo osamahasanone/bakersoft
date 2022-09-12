@@ -23,13 +23,13 @@ Please make sure that you have Git and Docker installed on you machine.
 ## Installation
 
 1.  Clone the repo
-   
+
 ```sh
 git clone https://github.com/osamahasanone/bakersoft
 ```
-   
+
 2. Build Docker images and start containers in one command:
-   
+
 ```sh
 docker-compose up -d
 ```
@@ -39,4 +39,3 @@ docker-compose up -d
 ```sh
 docker-compose exec web pytest
 ```
-
