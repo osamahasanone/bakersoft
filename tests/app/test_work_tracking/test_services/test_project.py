@@ -48,9 +48,9 @@ def test_get_assigned_to_teams():
     team_1 = baker.make(Team)
     team_2 = baker.make(Team)
     team_3 = baker.make(Team)
-    baker.make(Task, project=project, team=team_1)
-    baker.make(Task, project=project, team=team_2)
-    baker.make(Task, project=project, team=team_3)
+    baker.make(Task, project=project, team_assigned_to=team_1)
+    baker.make(Task, project=project, team_assigned_to=team_2)
+    baker.make(Task, project=project, team_assigned_to=team_3)
     assert get_assigned_to_teams(project) == 3
 
 

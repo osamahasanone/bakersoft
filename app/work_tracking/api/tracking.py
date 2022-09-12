@@ -73,10 +73,12 @@ class WorkTimeLogViewSet(ModelViewSet):
         return self.request.user.employee
 
     def get_queryset(self):
+        task_ids = [task.project.id for task in self.employee.team.task_set.all()]
+        projects = Project.objects.filter(id__in=task_ids)
         return WorkTimeLog.objects.select_related(
             "employee", "task__project"
         ).filter(  # Noqa
-            task__in=self.employee.team.task_set.all()
+            task__project__in=projects
         )
 
     def check_object_permissions(self, request, obj):
