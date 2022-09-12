@@ -1,7 +1,7 @@
 from functools import cached_property
 
 from django_fsm import TransitionNotAllowed
-from rest_framework import mixins
+from rest_framework import mixins, status
 from rest_framework.decorators import action
 from rest_framework.permissions import SAFE_METHODS, IsAuthenticated
 from rest_framework.response import Response
@@ -71,7 +71,7 @@ class TaskViewSet(ModelViewSet):
         serializer.validated_data["employee"] = self.request.user.employee
         serializer.validated_data["task"] = task
         serializer.save()
-        return Response({})
+        return Response({}, status=status.HTTP_201_CREATED)
 
 
 class WorkTimeLogViewSet(

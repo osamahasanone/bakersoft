@@ -124,7 +124,7 @@ def test_add_log_entry_by_member_of_team_assigned_to(api_client, employee):
     )
 
     # Assert
-    assert response.status_code == 200
+    assert response.status_code == 201
     assert WorkTimeLog.objects.count() == 1
 
 
