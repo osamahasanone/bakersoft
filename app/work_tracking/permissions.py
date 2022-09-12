@@ -14,7 +14,7 @@ class TimeLogAddPermission(permissions.BasePermission):
     message = "User can add logs only to tasks assigned to his team"
 
     def has_object_permission(self, request, view, obj):
-        return not obj.task or obj.task.team_assigned_to == request.user.employee.team
+        return obj.team_assigned_to == request.user.employee.team
 
 
 class TaskTransitionPermission(permissions.BasePermission):

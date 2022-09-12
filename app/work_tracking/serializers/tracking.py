@@ -62,6 +62,7 @@ class TaskSerializer(serializers.ModelSerializer):
 
 class WorkTimeLogSerializer(serializers.ModelSerializer):
     employee = serializers.PrimaryKeyRelatedField(read_only=True)
+    task = serializers.PrimaryKeyRelatedField(read_only=True)
     project = serializers.IntegerField(
         source="task.project.id", read_only=True, default=None
     )

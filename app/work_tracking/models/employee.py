@@ -20,9 +20,7 @@ class JobTitle(BaseModel):
 
 
 class Employee(BaseModel):
-    user = models.OneToOneField(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE
-    )  # Noqa E501
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     job_title = models.ForeignKey(
         JobTitle, null=True, blank=True, on_delete=models.SET_NULL
     )

@@ -127,47 +127,6 @@ def test_employee_cant_see_log_entry_of_project_his_team_not_envolved_in(api_cli
     assert response.status_code == 404
 
 
-# def test_employee_add_log_entry(api_client, employee):
-#     task = baker.make(Task, team_assigned_to=employee.team)
-#     # Action
-#     response = api_client.post(
-#         "/tracking/logs/",
-#         {
-#             "task": task.id,
-#             "since": "2022-09-12T13:00:00",
-#             "until": "2022-09-12T15:00:00",
-#             "achievement": "any",
-#             "details": "any",
-#         },
-#         format="json",
-#     )
-
-#     # Assert
-#     assert response.status_code == 201
-#     assert WorkTimeLog.objects.count() == 1
-
-
-# def test_employee_cant_add_log_entry_to_project_his_team_not_involved_in(api_client):
-#     another_team_member = baker.make(Employee)
-#     task = baker.make(Task, team_assigned_to=another_team_member.team)
-
-#     # Action
-#     response = api_client.post(
-#         "/tracking/logs/",
-#         {
-#             "task": task.id,
-#             "since": "2022-09-12T13:00:00",
-#             "until": "2022-09-12T15:00:00",
-#             "achievement": "any",
-#             "details": "any",
-#         },
-#         format="json",
-#     )
-
-#     # Assert
-#     assert response.status_code == 401
-
-
 def test_employee_modify_his_log_entry(api_client, employee):
     # Arrange
     task = baker.make(Task, team_assigned_to=employee.team)

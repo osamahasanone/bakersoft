@@ -9,7 +9,11 @@ from rest_framework.viewsets import GenericViewSet, ModelViewSet
 
 from work_tracking.errors import StateMachineChangeNotAllowed
 from work_tracking.models import Project, Task, WorkTimeLog
-from work_tracking.permissions import TaskTransitionPermission, TimeLogChangePermission
+from work_tracking.permissions import (
+    TaskTransitionPermission,
+    TimeLogAddPermission,
+    TimeLogChangePermission,
+)
 from work_tracking.serializers import (
     ProjectSerializer,
     ProjectStatsSerializer,
@@ -17,7 +21,6 @@ from work_tracking.serializers import (
     TaskStateChangeSerializer,
     WorkTimeLogSerializer,
 )
-from work_tracking.services.employee import can_add_log
 from work_tracking.services.project import get_stats as get_project_stats
 from work_tracking.services.task import perform_task_transition
 
@@ -55,6 +58,21 @@ class TaskViewSet(ModelViewSet):
             raise StateMachineChangeNotAllowed
         return Response({})
 
+    @action(
+        detail=True,
+        methods=["post"],
+        serializer_class=WorkTimeLogSerializer,
+        permission_classes=[IsAuthenticated, TimeLogAddPermission],
+    )
+    def add_log(self, request, pk=None):
+        task = self.get_object()
+        serializer = WorkTimeLogSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.validated_data["employee"] = self.request.user.employee
+        serializer.validated_data["task"] = task
+        serializer.save()
+        return Response({})
+
 
 class WorkTimeLogViewSet(
     mixins.ListModelMixin,
@@ -80,18 +98,3 @@ class WorkTimeLogViewSet(
         if self.request.method in SAFE_METHODS:
             return [IsAuthenticated()]
         return [IsAuthenticated(), TimeLogChangePermission()]
-
-    # def perform_create(self, serializer):
-    #     serializer.validated_data["employee"] = self.employee
-    #     serializer.save()
-
-    # def create(self, request, *args, **kwargs):
-    #     serializer = self.get_serializer(data=request.data)
-    #     serializer.is_valid(raise_exception=True)
-    #     if not can_add_log(self.employee, serializer.validated_data["task"]):
-    #         raise TaskIsAssignedToAnotherTeam
-    #     self.perform_create(serializer)
-    #     headers = self.get_success_headers(serializer.data)
-    #     return Response(
-    #         serializer.data, status=status.HTTP_201_CREATED, headers=headers
-    #     )

@@ -39,9 +39,7 @@ class TaskStateChange(models.Model):
 
 class WorkTimeLog(BaseModel):
     employee = models.ForeignKey(Employee, on_delete=models.PROTECT)
-    task = models.ForeignKey(
-        Task, null=True, blank=True, on_delete=models.SET_NULL
-    )  # Noqa E501
+    task = models.ForeignKey(Task, null=True, blank=True, on_delete=models.SET_NULL)
     since = models.DateTimeField()
     until = models.DateTimeField()
     achievement = models.CharField(max_length=255)
